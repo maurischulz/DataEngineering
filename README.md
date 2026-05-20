@@ -165,7 +165,7 @@ docker compose logs --tail=100 spark
 
 | Variável | Padrão | Descrição |
 |---|---|---|
-| `NB_USER` | `jovyan` | Nome do usuário dentro do container |
+| `NB_USER` | `hexdata` | Nome do usuário dentro do container |
 | `NB_UID` | `1000` | UID do usuário |
 | `NB_GID` | `100` | GID do grupo |
 | `JUPYTER_PORT` | `8888` | Porta local para acessar o Jupyter |

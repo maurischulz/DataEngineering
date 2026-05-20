@@ -8,7 +8,7 @@ services:
     image: pyspark-data-engineering:latest
 
     environment:
-      - NB_USER=${NB_USER:-jovyan}
+      - NB_USER=${NB_USER:-hexdata}
       - NB_UID=${NB_UID:-1000}
       - NB_GID=${NB_GID:-100}
       - CHOWN_HOME=yes
@@ -20,9 +20,9 @@ services:
     volumes:
       # Pasta de trabalho mapeada do host para o container
       # Definida via .env ou variável de ambiente do sistema
-      - ${WORK_DIR}:/home/${NB_USER:-jovyan}/work
+      - ${WORK_DIR}:/home/${NB_USER:-hexdata}/work
       # Pasta de código versionado (workspaceFolder do devcontainer)
-      - .:/home/${NB_USER:-jovyan}/code
+      - .:/home/${NB_USER:-hexdata}/code
 
     command: >
       start.sh jupyter notebook

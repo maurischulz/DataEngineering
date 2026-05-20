@@ -5,25 +5,18 @@ services:
       dockerfile: Dockerfile
     image: pyspark-data-engineering:latest
 
-    environment:
-      - NB_USER=${NB_USER:-hexdata}
-      - NB_UID=${NB_UID:-1000}
-      - NB_GID=${NB_GID:-100}
-      - CHOWN_HOME=yes
-      - CHOWN_HOME_OPTS=-R
-
     ports:
       - "${JUPYTER_PORT:-8888}:8888"
 
     volumes:
       # Pasta de trabalho mapeada do host para o container
       # Definida via .env — se não existir, usa ./work dentro do projeto
-      - ${WORK_DIR:-./work}:/home/${NB_USER:-hexdata}/work
+      - ${WORK_DIR:-./work}:/home/hexdata/work
       # Pasta de código versionado (workspaceFolder do devcontainer)
-      - .:/home/${NB_USER:-hexdata}/code
+      - .:/home/hexdata/code
 
     command: >
-      start.sh jupyter notebook
+      start-notebook.sh
       --NotebookApp.token=''
       --NotebookApp.disable_check_xsrf=true
       --NotebookApp.allow_origin='*'

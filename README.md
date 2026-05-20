@@ -51,10 +51,17 @@ NB_USER=hexdata
 NB_UID=1000
 NB_GID=100
 JUPYTER_PORT=8888
-WORK_DIR=/mnt/c/Users/SeuNome/OneDrive/Documents/Trabalho/Projetos
+WORK_DIR=/mnt/c/projeto
 ```
 
-> **Windows/WSL:** o caminho `WORK_DIR` deve usar o formato WSL (`/mnt/c/...`), não o formato Windows (`C:\...`).
+> **Formato do `WORK_DIR` por sistema operacional:**
+>
+> | Sistema | Exemplo |
+> |---|---|
+> | WSL 2 (Windows) | `/mnt/c/projeto` |
+> | Linux nativo (Ubuntu/Debian) | `/home/seuUsuario/projeto` |
+> | macOS | `/Users/seuUsuario/projeto` |
+> | Docker Toolbox (legado) | `/c/Users/seuUsuario/projeto` |
 
 ---
 

@@ -2,6 +2,18 @@
 # Base image: Jupyter + PySpark (Spark 3.x, Python 3.x, Jupyter notebook/lab)
 FROM jupyter/pyspark-notebook:latest
 
+# Renomear o usuário padrão (jovyan) para hexdata em tempo de build.
+# Necessário porque a imagem base grava /home/jovyan durante o próprio build;
+# definir NB_USER apenas em runtime (docker-compose) não remove esse diretório.
+ARG NB_USER=hexdata
+USER root
+RUN usermod -l ${NB_USER} jovyan && \
+    usermod -d /home/${NB_USER} -m ${NB_USER} && \
+    fix-permissions /home/${NB_USER}
+ENV NB_USER=${NB_USER}
+ENV HOME=/home/${NB_USER}
+USER ${NB_USER}
+
 # Conda environment name and Python version
 ARG conda_env=vscode_pyspark
 ARG py_ver=3.11

@@ -23,11 +23,6 @@ ARG py_ver=3.11
 RUN mamba create --yes -p "${CONDA_DIR}/envs/${conda_env}" python=${py_ver} ipython ipykernel && \
     mamba clean --all -f -y
 
-# Register the environment as a Jupyter kernel
-RUN "${CONDA_DIR}/envs/${conda_env}/bin/python" -m ipykernel install --user --name="${conda_env}" && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
-
 # Install full data engineering / data science stack
 RUN "${CONDA_DIR}/envs/${conda_env}/bin/pip" install \
     # --- Spark & big data ---
@@ -55,6 +50,15 @@ RUN "${CONDA_DIR}/envs/${conda_env}/bin/pip" install \
     openpyxl \
     xlrd \
     --no-cache-dir
+
+# Registrar o kernel APÓS as instalações e com --sys-prefix
+# para garantir visibilidade global independente do usuário
+RUN "${CONDA_DIR}/envs/${conda_env}/bin/python" -m ipykernel install \
+    --sys-prefix \
+    --name="${conda_env}" \
+    --display-name="Python 3.11 (${conda_env})" && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
 
 # Activate the environment by default in new shells
 RUN echo "conda activate ${conda_env}" >> "${HOME}/.bashrc"

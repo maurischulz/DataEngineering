@@ -9,7 +9,8 @@ ARG NB_USER=hexdata
 USER root
 RUN usermod -l ${NB_USER} jovyan && \
     usermod -d /home/${NB_USER} -m ${NB_USER} && \
-    fix-permissions /home/${NB_USER}
+    fix-permissions /home/${NB_USER} && \
+    rm -rf /home/jovyan
 ENV NB_USER=${NB_USER}
 ENV HOME=/home/${NB_USER}
 USER ${NB_USER}

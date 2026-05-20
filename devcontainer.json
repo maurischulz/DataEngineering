@@ -2,7 +2,7 @@
     "name": "PySpark Data Engineering",
     "dockerComposeFile": ["./docker-compose.yaml"],
     "service": "spark",
-    "workspaceFolder": "/home/${localEnv:NB_USER}/code",
+    "workspaceFolder": "/home/hexdata/code",
 
     "customizations": {
         "vscode": {

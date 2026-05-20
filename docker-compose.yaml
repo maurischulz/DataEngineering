@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     image: pyspark-data-engineering:latest
+    container_name: hexdata
+    hostname: hexdata
 
     environment:
       # Desabilita token de autenticação do Jupyter (acesso local seguro)

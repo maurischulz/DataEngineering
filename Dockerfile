@@ -51,10 +51,10 @@ RUN "${CONDA_DIR}/envs/${conda_env}/bin/pip" install \
     xlrd \
     --no-cache-dir
 
-# Registrar o kernel APÓS as instalações e com --sys-prefix
-# para garantir visibilidade global independente do usuário
+# Registrar o kernel em /opt/conda/share/jupyter/kernels/ (--prefix=CONDA_DIR)
+# para que o Jupyter base encontre o kernel independente do usuário
 RUN "${CONDA_DIR}/envs/${conda_env}/bin/python" -m ipykernel install \
-    --sys-prefix \
+    --prefix="${CONDA_DIR}" \
     --name="${conda_env}" \
     --display-name="Python 3.11 (${conda_env})" && \
     fix-permissions "${CONDA_DIR}" && \

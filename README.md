@@ -48,31 +48,37 @@ Abra o **PowerShell como Administrador** e verifique se o WSL já está instalad
 ```powershell
 wsl --status
 ```
+> Exibe a versão do WSL instalada e a distro padrão configurada. Use para confirmar se o ambiente já existe antes de instalar.
 
 Se não estiver instalado:
 
 ```powershell
 wsl --install
 ```
+> Habilita o WSL 2 no Windows, instala a distro Ubuntu padrão e configura o kernel Linux automaticamente. Requer acesso de administrador.
 
-> Reinicie o Windows quando solicitado.
+> Reinicie o Windows quando solicitado para que o kernel do WSL seja carregado corretamente.
 
 ---
 
 ### 2. Limpeza de distros antigas (opcional)
 
-Caso já tenha uma instalação anterior que queira remover:
+Caso já tenha uma instalação anterior com problemas ou que queira substituir:
 
 ```powershell
-# Listar distros instaladas
 wsl --list --verbose
+```
+> Lista todas as distros Linux instaladas no WSL com nome, estado (Running/Stopped) e versão (1 ou 2). Útil para identificar o que está instalado antes de remover.
 
-# Encerrar o WSL
+```powershell
 wsl --shutdown
+```
+> Encerra todas as distros WSL em execução. Necessário antes de remover uma distro para evitar erros de arquivo em uso.
 
-# Remover uma distro (exemplo)
+```powershell
 wsl --unregister Ubuntu
 ```
+> Remove completamente a distro informada, apagando todos os arquivos do sistema Linux associados. **Ação irreversível** — faça backup antes se necessário.
 
 ---
 
@@ -81,40 +87,49 @@ wsl --unregister Ubuntu
 ```powershell
 wsl --install -d Ubuntu-22.04
 ```
+> Instala especificamente o Ubuntu 22.04 LTS no WSL 2. A versão 22.04 é usada por ser LTS (suporte de longo prazo) e compatível com o Docker Engine e as libs deste projeto.
 
-Após a instalação:
-- Crie um **usuário Linux** e defina uma **senha** (usada para `sudo`)
-- Para abrir o Ubuntu pelo terminal:
+Após a instalação, o terminal pedirá para criar um usuário e senha Linux. Essa senha será usada para qualquer comando `sudo` dentro do Ubuntu.
+
+Para abrir o Ubuntu pelo terminal quando quiser:
 
 ```powershell
 wsl -d Ubuntu-22.04
 ```
+> Abre o terminal da distro especificada diretamente. Útil quando há múltiplas distros instaladas e você quer garantir que está abrindo a correta.
 
-Atualize o sistema dentro do Ubuntu:
+Dentro do Ubuntu, atualize os pacotes do sistema:
 
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
+> `apt update` baixa a lista de pacotes disponíveis nos repositórios. `apt upgrade -y` instala as versões mais recentes de todos os pacotes já instalados. Fazer isso logo após a instalação garante que o sistema está com as últimas correções de segurança.
 
 ---
 
 ### 4. Instalar Docker Engine no Ubuntu (sem Docker Desktop)
 
-> Este projeto utiliza Docker **nativo no Ubuntu via WSL**, sem depender do Docker Desktop.
+> Este projeto utiliza Docker **nativo no Ubuntu via WSL**, sem depender do Docker Desktop. Essa abordagem é mais leve, estável e dá controle total sobre o daemon.
 
 #### 4.1 Instalar dependências
 
 ```bash
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
+> Instala ferramentas necessárias para a etapa seguinte: `ca-certificates` valida certificados HTTPS, `curl` faz download de arquivos, `gnupg` verifica assinaturas criptográficas e `lsb-release` informa o codinome da distro (usado na URL do repositório).
 
 #### 4.2 Adicionar a chave GPG oficial do Docker
 
 ```bash
 sudo mkdir -p /etc/apt/keyrings
+```
+> Cria o diretório onde ficam armazenadas as chaves GPG de repositórios externos. O `-p` evita erro caso o diretório já exista.
+
+```bash
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
   sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 ```
+> Baixa a chave GPG pública do Docker e a converte para o formato binário (`.gpg`) esperado pelo APT. Essa chave garante que os pacotes instalados são autênticos e não foram adulterados.
 
 #### 4.3 Adicionar o repositório do Docker
 
@@ -124,45 +139,53 @@ https://download.docker.com/linux/ubuntu \
 $(lsb_release -cs) stable" | \
 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
+> Registra o repositório oficial do Docker como fonte de pacotes para o APT. O comando detecta automaticamente a arquitetura (`amd64`, `arm64`) e o codinome da distro (ex: `jammy` para Ubuntu 22.04), garantindo que os pacotes corretos sejam baixados.
 
 #### 4.4 Instalar o Docker
 
 ```bash
 sudo apt update
+```
+> Atualiza a lista de pacotes do APT para incluir os do repositório do Docker recém-adicionado.
+
+```bash
 sudo apt install -y docker-ce docker-ce-cli containerd.io \
   docker-buildx-plugin docker-compose-plugin
 ```
+> Instala o Docker completo: `docker-ce` é o daemon, `docker-ce-cli` é a linha de comando, `containerd.io` gerencia o ciclo de vida dos containers, `docker-buildx-plugin` habilita builds avançados e `docker-compose-plugin` adiciona o comando `docker compose`.
 
 #### 4.5 Iniciar o Docker
 
 ```bash
 sudo service docker start
+```
+> Inicia o daemon do Docker. No WSL o serviço não sobe automaticamente com o sistema, então é preciso iniciá-lo manualmente antes de usar qualquer comando Docker.
 
-# Verificar status
+```bash
 sudo service docker status
 ```
+> Verifica se o daemon está ativo (`running`). Confirme isso antes de tentar rodar containers para evitar erros de conexão.
 
 ---
 
 ### 5. Usar Docker sem sudo
 
-Adicione seu usuário ao grupo `docker` para não precisar de `sudo` em cada comando:
-
 ```bash
 sudo usermod -aG docker $USER
 ```
-
-Reinicie o WSL para aplicar:
+> Adiciona o usuário atual ao grupo `docker`. Por padrão, apenas o root pode se comunicar com o daemon — estar no grupo `docker` concede essa permissão sem precisar de `sudo` em cada comando.
 
 ```powershell
 wsl --shutdown
 ```
+> Reinicia o WSL para que a alteração de grupo seja aplicada na sessão. Sem reiniciar, o sistema ainda reconhece o usuário com os grupos antigos.
 
 Abra o Ubuntu novamente e teste:
 
 ```bash
 docker ps
 ```
+> Lista os containers em execução. Se retornar uma tabela vazia (sem erro), o Docker está acessível sem `sudo` e funcionando corretamente.
 
 ---
 
@@ -171,21 +194,21 @@ docker ps
 ```bash
 docker run hello-world
 ```
+> Baixa a imagem `hello-world` do Docker Hub (se não existir localmente), cria um container temporário e exibe uma mensagem de confirmação. É o teste padrão para validar que todo o pipeline — daemon, rede e registro — está operacional.
 
-Se aparecer a mensagem **"Hello from Docker!"**, o Docker está funcionando corretamente.
+Se aparecer a mensagem **"Hello from Docker!"**, o ambiente está pronto.
 
 ---
 
 ### 7. Boas práticas no WSL
 
-- **Iniciar o Docker após reboot do Windows** (o serviço não sobe automaticamente no WSL):
-
 ```bash
 sudo service docker start
 ```
+> Execute este comando sempre que reiniciar o Windows. O WSL não inicia serviços automaticamente no boot, portanto o Docker precisa ser ligado manualmente a cada sessão.
 
-- **Não misture** Docker Desktop com Docker nativo — use um ou outro
-- **Mantenha os projetos dentro do filesystem Linux** (`/home`) para melhor performance de I/O
+- **Não misture Docker Desktop com Docker nativo** — os dois gerenciam daemons diferentes e podem causar conflitos de socket e versão
+- **Mantenha os projetos dentro do filesystem Linux** (`/home/seuUsuario/`) — acessar arquivos do Windows via `/mnt/c/` é significativamente mais lento por causa da camada de tradução entre os dois sistemas de arquivos
 
 ---
 

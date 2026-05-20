@@ -18,6 +18,9 @@ build/
 Thumbs.db
 desktop.ini
 
+# Claude Code (arquivos internos do assistente)
+.claude/
+
 # Editores
 .vscode/
 *.swp
@@ -35,3 +38,4 @@ logs/
 *.xls
 data/
 datasets/
+*.rar

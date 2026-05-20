@@ -16,8 +16,8 @@ services:
       - .:/home/hexdata/code
 
     command: >
-      start-notebook.sh
-      --NotebookApp.token=''
-      --NotebookApp.disable_check_xsrf=true
-      --NotebookApp.allow_origin='*'
-      --NotebookApp.ip='0.0.0.0'
+      start-notebook.py
+      --ServerApp.token=''
+      --ServerApp.ip='0.0.0.0'
+      --ServerApp.allow_origin='*'
+      --ServerApp.disable_check_xsrf=true

@@ -19,8 +19,8 @@ services:
 
     volumes:
       # Pasta de trabalho mapeada do host para o container
-      # Definida via .env ou variável de ambiente do sistema
-      - ${WORK_DIR}:/home/${NB_USER:-hexdata}/work
+      # Definida via .env — se não existir, usa ./work dentro do projeto
+      - ${WORK_DIR:-./work}:/home/${NB_USER:-hexdata}/work
       # Pasta de código versionado (workspaceFolder do devcontainer)
       - .:/home/${NB_USER:-hexdata}/code
 

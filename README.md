@@ -223,6 +223,8 @@ cd DataEngineering
 
 ### 2. Crie o arquivo `.env` a partir do exemplo
 
+> **Obrigatório antes de qualquer comando `docker compose`.** Sem o `.env`, a variável `WORK_DIR` fica vazia e o Docker falha ao montar os volumes.
+
 ```bash
 cp .env.example .env
 ```

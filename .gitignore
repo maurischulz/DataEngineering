@@ -36,6 +36,9 @@ desktop.ini
 *.log
 logs/
 
+# Pasta de trabalho local (fallback quando WORK_DIR não está definido)
+work/
+
 # Dados sensíveis ou volumosos
 *.csv
 *.parquet

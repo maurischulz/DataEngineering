@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  spark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pyspark-data-engineering:latest
+
+    environment:
+      - NB_USER=${NB_USER:-jovyan}
+      - NB_UID=${NB_UID:-1000}
+      - NB_GID=${NB_GID:-100}
+      - CHOWN_HOME=yes
+      - CHOWN_HOME_OPTS=-R
+
+    ports:
+      - "${JUPYTER_PORT:-8888}:8888"
+
+    volumes:
+      # Pasta de trabalho mapeada do host para o container
+      # Definida via .env ou variável de ambiente do sistema
+      - ${WORK_DIR}:/home/${NB_USER:-jovyan}/work
+      # Pasta de código versionado (workspaceFolder do devcontainer)
+      - .:/home/${NB_USER:-jovyan}/code
+
+    command: >
+      start.sh jupyter notebook
+      --NotebookApp.token=''
+      --NotebookApp.disable_check_xsrf=true
+      --NotebookApp.allow_origin='*'
+      --NotebookApp.ip='0.0.0.0'

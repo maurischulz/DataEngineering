@@ -1,0 +1,49 @@
+{
+    "name": "PySpark Data Engineering",
+    "dockerComposeFile": ["./docker-compose.yaml"],
+    "service": "spark",
+    "workspaceFolder": "/home/${localEnv:NB_USER}/code",
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "python.linting.enabled": true,
+                "python.linting.pylintEnabled": true,
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "ms-python.black-formatter",
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter"
+                },
+                "notebook.formatOnSave.enabled": true
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-python.black-formatter",
+                "ms-python.isort",
+                "charliermarsh.ruff",
+
+                "ms-toolsai.jupyter",
+                "ms-toolsai.jupyter-keymap",
+                "ms-toolsai.jupyter-renderers",
+                "ms-toolsai.datawrangler",
+
+                "mechatroner.rainbow-csv",
+                "mtxr.sqltools",
+                "qwtel.sqlite-viewer",
+                "cweijan.vscode-database-client2",
+
+                "redhat.vscode-yaml",
+                "ms-azuretools.vscode-docker",
+                "eamodio.gitlens",
+                "streetsidesoftware.code-spell-checker"
+            ]
+        }
+    }
+}

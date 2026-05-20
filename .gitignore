@@ -1,0 +1,37 @@
+# Variáveis de ambiente locais (nunca versionar)
+.env
+
+# Dados e notebooks com output pesado
+*.ipynb_checkpoints/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Artefatos de build
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Dados sensíveis ou volumosos
+*.csv
+*.parquet
+*.xlsx
+*.xls
+data/
+datasets/

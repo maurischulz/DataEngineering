@@ -8,17 +8,15 @@ services:
     hostname: hexdata
 
     environment:
-      # Desabilita token de autenticação do Jupyter (acesso local seguro)
       - JUPYTER_TOKEN=
-      # Porta interna do servidor Jupyter
       - JUPYTER_PORT=8888
 
     ports:
       - "${JUPYTER_PORT:-8888}:8888"
 
     volumes:
-      # Pasta de trabalho mapeada do host para o container
-      # Definida via .env — se não existir, usa ./work dentro do projeto
       - ${WORK_DIR:-./work}:/home/hexdata/work
-      # Pasta de código versionado (workspaceFolder do devcontainer)
       - .:/home/hexdata/code
+
+    # Mantém o container vivo — jupyter é iniciado manualmente pelo terminal
+    command: sleep infinity

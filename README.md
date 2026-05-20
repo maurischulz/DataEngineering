@@ -47,11 +47,11 @@ cp .env.example .env
 Edite o `.env` com seus valores:
 
 ```env
-NB_USER=mauri
+NB_USER=hexdata
 NB_UID=1000
 NB_GID=100
 JUPYTER_PORT=8888
-WORK_DIR=/mnt/c/Users/Mauri/OneDrive/Documents/Trabalho/Projetos
+WORK_DIR=/mnt/c/Users/SeuNome/OneDrive/Documents/Trabalho/Projetos
 ```
 
 > **Windows/WSL:** o caminho `WORK_DIR` deve usar o formato WSL (`/mnt/c/...`), não o formato Windows (`C:\...`).
@@ -105,10 +105,10 @@ docker build -t pyspark-data-engineering:latest .
 docker run -d \
   --name spark-dev \
   -p 8888:8888 \
-  -e NB_USER=mauri \
+  -e NB_USER=hexdata \
   -e NB_UID=1000 \
   -e CHOWN_HOME=yes \
-  -v /mnt/c/Users/Mauri/projetos:/home/mauri/work \
+  -v /mnt/c/Users/SeuNome/projetos:/home/hexdata/work \
   pyspark-data-engineering:latest \
   start.sh jupyter notebook \
     --NotebookApp.token='' \
@@ -235,7 +235,13 @@ docker compose logs --tail=100 spark
 | SQLite Viewer | Abre arquivos `.db` e `.sqlite` |
 | Database Client | Interface visual para múltiplos bancos |
 | GitLens | Histórico de git linha a linha |
+| Git Graph | Visualização gráfica do histórico de commits |
 | Docker | Gerenciar containers sem sair do VS Code |
+| Parquet Explorer | Abre arquivos `.parquet` diretamente no editor |
+| DotENV | Syntax highlight para arquivos `.env` |
+| Error Lens | Exibe erros e warnings inline na linha do código |
+| autoDocstring | Gera docstrings automaticamente em funções Python |
+| Jupyter Cell Tags | Organiza células de notebooks com tags |
 
 ---
 

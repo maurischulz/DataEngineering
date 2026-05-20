@@ -42,7 +42,14 @@
                 "redhat.vscode-yaml",
                 "ms-azuretools.vscode-docker",
                 "eamodio.gitlens",
-                "streetsidesoftware.code-spell-checker"
+                "mhutchie.git-graph",
+                "streetsidesoftware.code-spell-checker",
+
+                "AdamViola.parquet-explorer",
+                "mikestead.dotenv",
+                "usernamehw.errorlens",
+                "njpwerner.autodocstring",
+                "ms-toolsai.vscode-jupyter-cell-tags"
             ]
         }
     }

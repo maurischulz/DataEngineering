@@ -1,5 +1,10 @@
 # Variáveis de ambiente locais (nunca versionar)
 .env
+.env.local
+.env.*.local
+
+# Template de variáveis — deve ser versionado
+!.env.example
 
 # Dados e notebooks com output pesado
 *.ipynb_checkpoints/

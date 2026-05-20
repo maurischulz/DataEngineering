@@ -18,5 +18,5 @@ services:
       - ${WORK_DIR:-./work}:/home/hexdata/work
       - .:/home/hexdata/code
 
-    # Mantém o container vivo — jupyter é iniciado manualmente pelo terminal
-    command: sleep infinity
+    # Inicia o Jupyter Lab diretamente, sem passar pelo start.sh
+    command: /bin/bash -c "/opt/conda/bin/jupyter lab --ip=0.0.0.0 --no-browser --IdentityProvider.token='' 2>&1"

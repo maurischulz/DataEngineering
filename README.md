@@ -218,7 +218,7 @@ sudo service docker start
 
 ```bash
 git clone <url-do-repositorio>
-cd devcontainer
+cd DataEngineering
 ```
 
 ### 2. Crie o arquivo `.env` a partir do exemplo
@@ -438,7 +438,7 @@ docker compose logs --tail=100 spark
 ## Estrutura do projeto
 
 ```
-devcontainer/
+DataEngineering/
 ├── Dockerfile              # Definição da imagem
 ├── docker-compose.yaml     # Orquestração do container
 ├── devcontainer.json       # Configuração do VS Code Dev Container

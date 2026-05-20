@@ -7,6 +7,14 @@ Ambiente de desenvolvimento completo para Engenharia e Ciência de Dados, basead
 ## Sumário
 
 - [Pré-requisitos](#pré-requisitos)
+- [Configuração do ambiente — WSL + Docker](#configuração-do-ambiente--wsl--docker)
+  - [1. Instalar o WSL 2](#1-instalar-o-wsl-2)
+  - [2. Limpeza de distros antigas](#2-limpeza-de-distros-antigas-opcional)
+  - [3. Instalar Ubuntu no WSL](#3-instalar-ubuntu-no-wsl)
+  - [4. Instalar Docker Engine no Ubuntu](#4-instalar-docker-engine-no-ubuntu-sem-docker-desktop)
+  - [5. Usar Docker sem sudo](#5-usar-docker-sem-sudo)
+  - [6. Testar o Docker](#6-testar-o-docker)
+  - [7. Boas práticas no WSL](#7-boas-práticas-no-wsl)
 - [Configuração inicial](#configuração-inicial)
 - [Subindo o container com Docker](#subindo-o-container-com-docker)
 - [Usando com VS Code Dev Containers](#usando-com-vs-code-dev-containers)
@@ -26,6 +34,158 @@ Ambiente de desenvolvimento completo para Engenharia e Ciência de Dados, basead
 | WSL 2 (Windows) | — | `wsl --install` no PowerShell como admin |
 | VS Code | 1.80+ | https://code.visualstudio.com |
 | Extensão Dev Containers | — | ID: `ms-vscode-remote.remote-containers` |
+
+---
+
+## Configuração do ambiente — WSL + Docker
+
+> Esta seção cobre a instalação do zero para Windows. Se já tiver WSL e Docker configurados, pule para [Configuração inicial](#configuração-inicial).
+
+### 1. Instalar o WSL 2
+
+Abra o **PowerShell como Administrador** e verifique se o WSL já está instalado:
+
+```powershell
+wsl --status
+```
+
+Se não estiver instalado:
+
+```powershell
+wsl --install
+```
+
+> Reinicie o Windows quando solicitado.
+
+---
+
+### 2. Limpeza de distros antigas (opcional)
+
+Caso já tenha uma instalação anterior que queira remover:
+
+```powershell
+# Listar distros instaladas
+wsl --list --verbose
+
+# Encerrar o WSL
+wsl --shutdown
+
+# Remover uma distro (exemplo)
+wsl --unregister Ubuntu
+```
+
+---
+
+### 3. Instalar Ubuntu no WSL
+
+```powershell
+wsl --install -d Ubuntu-22.04
+```
+
+Após a instalação:
+- Crie um **usuário Linux** e defina uma **senha** (usada para `sudo`)
+- Para abrir o Ubuntu pelo terminal:
+
+```powershell
+wsl -d Ubuntu-22.04
+```
+
+Atualize o sistema dentro do Ubuntu:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+---
+
+### 4. Instalar Docker Engine no Ubuntu (sem Docker Desktop)
+
+> Este projeto utiliza Docker **nativo no Ubuntu via WSL**, sem depender do Docker Desktop.
+
+#### 4.1 Instalar dependências
+
+```bash
+sudo apt install -y ca-certificates curl gnupg lsb-release
+```
+
+#### 4.2 Adicionar a chave GPG oficial do Docker
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+#### 4.3 Adicionar o repositório do Docker
+
+```bash
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+#### 4.4 Instalar o Docker
+
+```bash
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io \
+  docker-buildx-plugin docker-compose-plugin
+```
+
+#### 4.5 Iniciar o Docker
+
+```bash
+sudo service docker start
+
+# Verificar status
+sudo service docker status
+```
+
+---
+
+### 5. Usar Docker sem sudo
+
+Adicione seu usuário ao grupo `docker` para não precisar de `sudo` em cada comando:
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+Reinicie o WSL para aplicar:
+
+```powershell
+wsl --shutdown
+```
+
+Abra o Ubuntu novamente e teste:
+
+```bash
+docker ps
+```
+
+---
+
+### 6. Testar o Docker
+
+```bash
+docker run hello-world
+```
+
+Se aparecer a mensagem **"Hello from Docker!"**, o Docker está funcionando corretamente.
+
+---
+
+### 7. Boas práticas no WSL
+
+- **Iniciar o Docker após reboot do Windows** (o serviço não sobe automaticamente no WSL):
+
+```bash
+sudo service docker start
+```
+
+- **Não misture** Docker Desktop com Docker nativo — use um ou outro
+- **Mantenha os projetos dentro do filesystem Linux** (`/home`) para melhor performance de I/O
 
 ---
 
